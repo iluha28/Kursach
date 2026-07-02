@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<title>MoveEasy — Аренда автомобилей по всей России</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="style.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#top" class="logo" aria-label="MoveEasy — главная">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="15" fill="#FFF1E6"/><path d="M7 19c0-1 .6-2 1.6-2.3l1.2-3.4c.4-1.1 1.4-1.8 2.6-1.8h5.2c1.2 0 2.2.7 2.6 1.8l1.2 3.4c1 .3 1.6 1.3 1.6 2.3v2a1 1 0 0 1-1 1h-1.2a1 1 0 0 1-1-1v-.6H10.2v.6a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1z" fill="#FF6900"/><circle cx="11" cy="19.2" r="1.4" fill="#fff"/><circle cx="19" cy="19.2" r="1.4" fill="#fff"/></svg>
+      Move<span>Easy</span>
+    </a>
+    <nav class="main-nav">
+      <a href="#results">Аренда авто</a>
+      <a href="#ideas">Идеи для поездок</a>
+      <a href="#map">Города</a>
+      <a href="#price-table">Виды авто</a>
+      <a href="#faq">Помощь</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang-btn">RU · ₽ RUB</button>
+      <button class="btn btn-outline">Войти</button>
+    </div>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="container hero-content">
+    <h1>АРЕНДА АВТО В РОССИИ</h1>
+    <div class="hero-simple-search">
+      <input type="text" placeholder="Город или аэропорт" value="Москва">
+      <button type="button" class="btn-hero-search" onclick="document.querySelector('.search-card').scrollIntoView({behavior:'smooth', block:'center'});">Найти</button>
+    </div>
+  </div>
+</section>
+
+<section class="section container" id="ideas">
+  
+  <div class="search-card">
+    <div class="search-card-inner">
+      <form id="searchForm">
+        <div class="search-row">
+          <div class="search-field">
+            <label for="pickupCity">Город получения</label>
+            <select id="pickupCity"></select>
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field checkbox-field">
+            <label class="checkbox-label"><input type="checkbox" id="diffReturn"> Вернуть в другом городе</label>
+            <select id="returnCity" disabled></select>
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <label for="pickupDate">Получение</label>
+            <div class="time-row">
+              <input type="date" id="pickupDate" required>
+              <input type="time" id="pickupTime" value="10:00" required>
+            </div>
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <label for="returnDate">Возврат</label>
+            <div class="time-row">
+              <input type="date" id="returnDate" required>
+              <input type="time" id="returnTime" value="10:00" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-search">Найти авто</button>
+        </div>
+        <div class="class-chips" id="heroChips"></div>
+      </form>
+    </div>
+  </div>
+
+  <h2>Идеи для поездок на автомобиле</h2>
+  <p class="lead">Популярные маршруты, живописные локации и готовые планы путешествий</p>
+  <div class="ideas-grid">
+    <div class="idea-card">
+      <div class="idea-img-wrap">
+        <img src="images/gold.png" alt="gold" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'180\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%236b7280\'>Золотое Кольцо</text></svg>';">
+        <span class="idea-badge">Уикенд</span>
+      </div>
+      <div class="idea-body">
+        <h3>Золотое кольцо России</h3>
+        <p>Маршрут через старинные русские города: Сергиев Посад, Переславль-Залесский, Ростов Великий и Ярославль.</p>
+        <a href="#" class="idea-link">Смотреть маршрут →</a>
+      </div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-img-wrap">
+        <img src="images/sochi.png" alt="sochi" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'180\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%236b7280\'>Сочи - Горы</text></svg>';">
+        <span class="idea-badge">Горы и море</span>
+      </div>
+      <div class="idea-body">
+        <h3>Серпантины Красной Поляны</h3>
+        <p>Идеальное путешествие по идеальным дорогам от побережья Черного моря до заснеженных горных вершин Кавказа.</p>
+        <a href="#" class="idea-link">Смотреть маршрут →</a>
+      </div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-img-wrap">
+        <img src="images/karelia.png" alt="Карелия" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'180\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%236b7280\'>Карелия</text></svg>';">
+        <span class="idea-badge">Природа</span>
+      </div>
+      <div class="idea-body">
+        <h3>Вокруг Ладожского озера</h3>
+        <p>Посетите Мраморный каньон Рускеала, дикие карельские леса и живописные шхеры на комфортном внедорожнике.</p>
+        <a href="#" class="idea-link">Смотреть маршрут →</a>
+      </div>
+    </div>
+    <div class="idea-card">
+      <div class="idea-img-wrap">
+        <img src="images/altai.png" alt="Чуйский тракт" onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'300\' height=\'180\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' fill=\'%236b7280\'>Чуйский Тракт</text></svg>';">
+        <span class="idea-badge">Топ тревел</span>
+      </div>
+      <div class="idea-body">
+        <h3>Легендарный Чуйский тракт</h3>
+        <p>Одна из самых красивых дорог мира по версии National Geographic. Прокатитесь по бескрайним просторам Алтая.</p>
+        <a href="#" class="idea-link">Смотреть маршрут →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section results container" id="results">
+  <div class="results-header">
+    <div>
+      <h2>Авто в городе <span id="cityLabel">Москва</span></h2>
+      <p id="datesLabel"></p>
+    </div>
+  </div>
+  <div class="results-toolbar">
+    <div class="tabs" id="classTabs"></div>
+    <select class="sort-select" id="sortSelect">
+      <option value="price-asc">Сначала дешёвые</option>
+      <option value="price-desc">Сначала дорогие</option>
+      <option value="rating">По рейтингу</option>
+    </select>
+  </div>
+  <div class="cars-grid" id="carsGrid"></div>
+</section>
+
+<section class="section booking hidden" id="booking">
+  <div class="container booking-inner">
+    <div class="booking-main">
+      <h2>Оформление аренды</h2>
+      <p class="lead">Проверьте параметры брони и выберите дополнительные услуги</p>
+      
+      <div class="selected-car-summary" id="selectedCarSummary"></div>
+      
+      <div class="days-counter-wrap">
+        <label for="daysCountInput">Количество дней аренды (минимум 3):</label>
+        <div class="counter-ctrl">
+          <button type="button" class="counter-btn" id="dayMinusBtn">−</button>
+          <div class="counter-val" id="dayCountVal">3</div>
+          <button type="button" class="counter-btn" id="dayPlusBtn">+</button>
+        </div>
+      </div>
+
+      <h3>Дополнительные услуги</h3>
+      <div class="services-list" id="servicesList"></div>
+    </div>
+    <aside class="receipt" id="receipt">
+      <h3>Итоговый чек</h3>
+      <div class="receipt-lines" id="receiptLines"></div>
+      <div class="receipt-total"><span>Итого</span><span id="receiptTotal">0 ₽</span></div>
+      <button class="btn btn-primary btn-block" id="confirmBtn">Подтвердить бронирование</button>
+      <p class="receipt-note">Оплата при получении автомобиля. Бесплатная отмена за 24 часа до начала аренды.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="section confirmation" id="confirmation">
+  <div class="confirm-box">
+    <div class="confirm-icon">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 12.5 9.5 18 20 6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>Бронирование подтверждено</h2>
+    <p>Номер вашей брони:</p>
+    <div class="confirm-id" id="confirmId">ME-000000</div>
+    <div class="confirm-receipt" id="confirmReceipt"></div>
+    <button class="btn btn-primary" id="newSearchBtn">Оформить новую аренду</button>
+  </div>
+</section>
+
+<section class="section insights container">
+  <h2>MoveEasy: советы и статистика по аренде</h2>
+  <p class="lead">Актуальные данные и рекомендации, чтобы найти выгодное предложение</p>
+  <div class="insight-cards">
+    <div class="insight-card">
+      <div class="num">Когда бронировать</div>
+      <h3>За сколько дней бронировать авто в России?</h3>
+      <p>Бронируйте минимум за 7 дней до поездки — так вы получите цену ниже средней. На майские праздники и новогодние каникулы планируйте за 3–4 недели.</p>
+    </div>
+    <div class="insight-card">
+      <div class="num">Популярный класс</div>
+      <h3>Какой класс авто арендуют чаще всего?</h3>
+      <p>Чаще всего выбирают эконом-класс (Kia Rio или похожий) — в среднем 1 800 ₽/день. Встречаются предложения и от 1 500 ₽/день.</p>
+    </div>
+    <div class="insight-card">
+      <div class="num">Сезонность</div>
+      <h3>Когда аренда дешевле всего?</h3>
+      <p>Самый недорогой месяц — январь, в среднем 1 900 ₽/день. Август — самый дорогой, около 3 400 ₽/день, это на 28% выше среднегодовой цены.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section price-table container" id="price-table">
+  <h2>Сравнение цен по классам авто в России</h2>
+  <p class="lead">Ориентировочная стоимость аренды в сутки по данным MoveEasy</p>
+  <div class="price-bars" id="priceBars"></div>
+</section>
+
+<section class="section container">
+  <h2>Советы по аренде авто в России</h2>
+  <div class="tips-list">
+    <div class="tip-item"><span class="dot">1</span><span>Ремни безопасности обязательны для всех пассажиров; дети ростом ниже 150 см должны находиться в автокресле.</span></div>
+    <div class="tip-item"><span class="dot">2</span><span>С декабря по февраль во многих регионах обязательны зимние шины — уточняйте это при получении автомобиля.</span></div>
+    <div class="tip-item"><span class="dot">3</span><span>На трассах М-11, М-4 и М-12 действует платный проезд — учитывайте это при планировании маршрута.</span></div>
+    <div class="tip-item"><span class="dot">4</span><span>Минимальный возраст водителя — обычно 21 год при стаже от 2 лет; для бизнес- и премиум-класса требования могут быть строже.</span></div>
+    <div class="tip-item"><span class="dot">5</span><span>Выезд за пределы региона обычно разрешён, а для выезда в Беларусь или Казахстан нужно предупредить прокатную компанию заранее.</span></div>
+    <div class="tip-item"><span class="dot">6</span><span>Около 30% пользователей MoveEasy находят авто эконом-класса дешевле 1 700 ₽/день.</span></div>
+  </div>
+</section>
+
+<section class="section faq container" id="faq">
+  <h2>Частые вопросы об аренде авто в России</h2>
+  <div class="accordion" id="faqAccordion"></div>
+</section>
+
+<section class="section directory container">
+  <h2>Каталог прокатных компаний-партнёров</h2>
+  <p class="lead">MoveEasy сравнивает предложения проверенных партнёров по всей стране</p>
+  <div class="directory-grid" id="directoryGrid"></div>
+</section>
+
+<section class="map-section" id="map">
+  <div class="container">
+    <h2>Города, где доступна аренда MoveEasy</h2>
+    <p class="lead">Нажмите на отметку на интерактивной карте, чтобы начать поиск в этом городе</p>
+  </div>
+  <div class="map-wrap">
+    <div id="leafletMap"></div>
+    <div class="map-legend">
+      <h4>Города на карте</h4>
+      <div id="legendList"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-about">
+      <div class="footer-logo">Move<span>Easy</span></div>
+      <p>Сравниваем цены прокатных компаний по всей России, чтобы вы экономили время и деньги на аренде авто.</p>
+      <div class="footer-contact">support@moveeasy.ru<br>8 800 555-35-35</div>
+    </div>
+    <div>
+      <h4>Города</h4>
+      <ul id="footerCities"></ul>
+    </div>
+    <div>
+      <h4>Информация</h4>
+      <ul>
+        <li><a href="#">О сервисе</a></li>
+        <li><a href="#">Условия аренды</a></li>
+        <li><a href="#">Страхование и франшиза</a></li>
+        <li><a href="#">Публичная оферта</a></li>
+        <li><a href="#">Политика конфиденциальности</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Поддержка</h4>
+      <ul>
+        <li><a href="#faq">Частые вопросы</a></li>
+        <li><a href="#">Связаться с нами</a></li>
+        <li><a href="#">Партнёрам</a></li>
+        <li><a href="#">Личный кабинет</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 MoveEasy. Все права защищены.</span>
+    <span>Цены указаны в рублях и могут отличаться в зависимости от партнёра.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- DATA ---------------- */
+  var CITIES = [
+    {name:"Москва", points:320, lat:55.7558, lng:37.6173},
+    {name:"Санкт-Петербург", points:180, lat:59.9343, lng:30.3351},
+    {name:"Казань", points:95, lat:55.7887, lng:49.1221},
+    {name:"Сочи", points:80, lat:43.5853, lng:39.7203},
+    {name:"Краснодар", points:70, lat:45.0355, lng:38.9753},
+    {name:"Екатеринбург", points:90, lat:56.8389, lng:60.6057},
+    {name:"Новосибирск", points:75, lat:55.0084, lng:82.9357},
+    {name:"Калининград", points:45, lat:54.7104, lng:20.4522}
+  ];
+
+  var CLASS_LABELS = {economy:"Эконом", comfort:"Комфорт", business:"Бизнес", suv:"Внедорожник", minivan:"Минивэн", premium:"Премиум"};
+  var CLASS_COLORS = {economy:"#0F9D58", comfort:"#1A73E8", business:"#7C3AED", suv:"#EA580C", minivan:"#0891B2", premium:"#92400E"};
+  var CLASS_ORDER = ["economy","comfort","business","suv","minivan","premium"];
+
+  // Расширенный ассортимент: ровно по 5 машин в каждом классе
+  var CARS = [
+    // Economy
+    {id:1,  name:"Lada Granta",            cls:"economy", seats:5, doors:4, bags:2, trans:"МКПП", price:1500, rating:4.3, img:"granta.png"},
+    {id:2,  name:"Kia Rio",                cls:"economy", seats:5, doors:4, bags:2, trans:"АКПП", price:1800, rating:4.5, img:"rio.png"},
+    {id:3,  name:"Hyundai Solaris",        cls:"economy", seats:5, doors:4, bags:2, trans:"АКПП", price:1700, rating:4.4, img:"solaris.png"},
+    {id:4,  name:"Volkswagen Polo",        cls:"economy", seats:5, doors:4, bags:2, trans:"АКПП", price:1850, rating:4.6, img:"polo.png"},
+    {id:5,  name:"Renault Logan",          cls:"economy", seats:5, doors:4, bags:3, trans:"МКПП", price:1400, rating:4.2, img:"logan.png"},
+    
+    // Comfort
+    {id:6,  name:"Skoda Octavia",          cls:"comfort", seats:5, doors:4, bags:3, trans:"АКПП", price:2800, rating:4.6, img:"octavia.png"},
+    {id:7,  name:"Volkswagen Jetta",       cls:"comfort", seats:5, doors:4, bags:3, trans:"АКПП", price:2600, rating:4.5, img:"jetta.png"},
+    {id:8,  name:"Kia Cerato",             cls:"comfort", seats:5, doors:4, bags:3, trans:"АКПП", price:2500, rating:4.4, img:"cerato.png"},
+    {id:9,  name:"Hyundai Elantra",        cls:"comfort", seats:5, doors:4, bags:3, trans:"АКПП", price:2550, rating:4.5, img:"elantra.png"},
+    {id:10, name:"Toyota Corolla",         cls:"comfort", seats:5, doors:4, bags:2, trans:"Вариатор", price:2900, rating:4.7, img:"corolla.png"},
+
+    // Business
+    {id:11, name:"Toyota Camry",           cls:"business", seats:5, doors:4, bags:3, trans:"АКПП", price:5200, rating:4.8, img:"camry.png"},
+    {id:12, name:"Skoda Superb",           cls:"business", seats:5, doors:4, bags:4, trans:"АКПП", price:4900, rating:4.7, img:"superb.png"},
+    {id:13, name:"Kia K5",                 cls:"business", seats:5, doors:4, bags:3, trans:"АКПП", price:4800, rating:4.6, img:"k5.png"},
+    {id:14, name:"Hyundai Sonata",         cls:"business", seats:5, doors:4, bags:3, trans:"АКПП", price:4700, rating:4.5, img:"sonata.png"},
+    {id:15, name:"Mazda 6",                cls:"business", seats:5, doors:4, bags:3, trans:"АКПП", price:5000, rating:4.6, img:"mazda6.png"},
+
+    // SUV
+    {id:16, name:"Hyundai Creta",          cls:"suv", seats:5, doors:4, bags:3, trans:"АКПП", price:3400, rating:4.6, img:"creta.png"},
+    {id:17, name:"Kia Sportage",           cls:"suv", seats:5, doors:4, bags:4, trans:"АКПП", price:3800, rating:4.6, img:"sportage.png"},
+    {id:18, name:"Renault Duster",         cls:"suv", seats:5, doors:4, bags:4, trans:"МКПП", price:2800, rating:4.4, img:"duster.png"},
+    {id:19, name:"Toyota RAV4",            cls:"suv", seats:5, doors:4, bags:4, trans:"Вариатор", price:4500, rating:4.8, img:"rav4.png"},
+    {id:20, name:"Nissan Qashqai",         cls:"suv", seats:5, doors:4, bags:3, trans:"Вариатор", price:3300, rating:4.5, img:"qashqai.png"},
+
+    // Minivan
+    {id:21, name:"Volkswagen Multivan",    cls:"minivan", seats:7, doors:4, bags:5, trans:"АКПП", price:5800, rating:4.7, img:"multivan.png"},
+    {id:22, name:"Hyundai H-1",            cls:"minivan", seats:8, doors:4, bags:4, trans:"АКПП", price:4500, rating:4.5, img:"h1.png"},
+    {id:23, name:"Mercedes-Benz Vito",     cls:"minivan", seats:8, doors:4, bags:5, trans:"АКПП", price:6500, rating:4.6, img:"vito.png"},
+    {id:24, name:"Toyota Alphard",         cls:"minivan", seats:7, doors:5, bags:4, trans:"АКПП", price:8800, rating:4.9, img:"alphard.png"},
+    {id:25, name:"Kia Carnival",           cls:"minivan", seats:7, doors:5, bags:5, trans:"АКПП", price:6000, rating:4.8, img:"carnival.png"},
+
+    // Premium
+    {id:26, name:"Mercedes-Benz E-Class",  cls:"premium", seats:5, doors:4, bags:3, trans:"АКПП", price:9500, rating:4.9, img:"eclass.png"},
+    {id:27, name:"BMW 5 Series",           cls:"premium", seats:5, doors:4, bags:3, trans:"АКПП", price:10200, rating:4.8, img:"bmw5.png"},
+    {id:28, name:"Audi A6",                cls:"premium", seats:5, doors:4, bags:3, trans:"АКПП", price:9200, rating:4.7, img:"a6.png"},
+    {id:29, name:"Porsche Panamera",       cls:"premium", seats:4, doors:4, bags:2, trans:"Робот", price:18000, rating:5.0, img:"panamera.png"},
+    {id:30, name:"BMW 7 Series",           cls:"premium", seats:5, doors:4, bags:4, trans:"АКПП", price:15000, rating:4.9, img:"bmw7.png"}
+  ];
+
+  var SERVICES = [
+    {id:"gps",       name:"GPS-навигатор",                  desc:"Точная навигация по городу и трассам", price:150,  perDay:true},
+    {id:"childseat", name:"Детское автокресло",              desc:"Сертифицированное кресло группы 1–3",  price:300,  perDay:true},
+    {id:"driver",    name:"Дополнительный водитель",          desc:"Ещё один человек сможет управлять авто", price:500, perDay:true},
+    {id:"kasko",     name:"Полное каско без франшизы",        desc:"Покрытие любых повреждений без доплат", price:900, perDay:true},
+    {id:"wifi",      name:"Wi-Fi роутер",                     desc:"Безлимитный интернет в поездке",       price:250,  perDay:true},
+    {id:"delivery",  name:"Доставка авто к адресу",           desc:"Привезём машину в удобное для вас место", price:1500, perDay:false}
+  ];
+
+  var FAQ = [
+    {q:"Сколько стоит аренда авто в России?", a:"В среднем аренда обходится в 2 600 ₽/день. Цена зависит от класса авто, города и сезона — эконом-класс можно найти от 1 500 ₽/день."},
+    {q:"Где найти аренду авто рядом со мной?", a:"Используйте карту в нижней части страницы — на ней отмечены города, где доступна аренда MoveEasy."},
+    {q:"В каких городах чаще всего арендуют авто?", a:"По данным поисковых запросов на MoveEasy, самые популярные города — Москва (41% запросов), Санкт-Петербург (19%) и Сочи (9%)."},
+    {q:"Сколько стоит аренда на неделю?", a:"В среднем неделя аренды обходится в 16 800 ₽ (2 400 ₽/день) — при бронировании от 7 дней действует скидка 10%."},
+    {q:"Со скольки лет можно арендовать авто?", a:"Минимальный возраст — 21 год при водительском стаже от 2 лет. Для бизнес- и премиум-класса некоторые партнёры требуют возраст от 23–25 лет."},
+    {q:"Нужны ли зимние шины?", a:"Да, с 1 декабря по конец февраля автомобили на большинстве точек MoveEasy комплектуются зимней резиной без дополнительной платы."},
+    {q:"Можно ли вернуть авто в другом городе?", a:"Да, отметьте опцию «Вернуть в другом городе» при поиске — доступно между крупными городами, может взиматься сбор за перегон."}
+  ];
+
+  var PARTNERS = [
+    {name:"АвтоПрокат Плюс", points:420},
+    {name:"ГородКар", points:380},
+    {name:"ТрансАвто Сервис", points:310},
+    {name:"ЕвроРент", points:275},
+    {name:"СитиДрайв Прокат", points:240},
+    {name:"Вояж Авто", points:190},
+    {name:"КарГо", points:165},
+    {name:"Прокат24", points:140}
+  ];
+
+  /* ---------------- STATE ---------------- */
+  var state = {
+    city: CITIES[0].name,
+    classFilter: "all",
+    sort: "price-asc",
+    selectedCar: null,
+    selectedServices: {},
+    forcedDays: 3,
+    leafletMap: null,
+    markers: {}
+  };
+
+  /* ---------------- HELPERS ---------------- */
+  function rub(n){ return n.toLocaleString("ru-RU") + " ₽"; }
+  function pad(n){ return n<10 ? "0"+n : ""+n; }
+  function toInputDate(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function formatDateLabel(dateStr){
+    var months=["янв","фев","мар","апр","мая","июн","июл","авг","сен","окт","ноя","дек"];
+    var d=new Date(dateStr+"T00:00:00");
+    return d.getDate()+" "+months[d.getMonth()];
+  }
+  function computeDays(){
+    return state.forcedDays;
+  }
+
+  /* ---------------- INIT FORM DEFAULTS ---------------- */
+  function initDefaults(){
+    var today = new Date();
+    var pickup = new Date(today); pickup.setDate(pickup.getDate()+2);
+    var ret = new Date(today); ret.setDate(ret.getDate()+5);
+    var pd=document.getElementById("pickupDate"), rd=document.getElementById("returnDate");
+    pd.min = toInputDate(today); rd.min = toInputDate(pickup);
+    pd.value = toInputDate(pickup); rd.value = toInputDate(ret);
+    
+    var baseMs = new Date(rd.value+"T00:00:00") - new Date(pd.value+"T00:00:00");
+    var baseDays = Math.round(baseMs/86400000);
+    state.forcedDays = baseDays >= 3 ? baseDays : 3;
+
+    pd.addEventListener("change", function(){
+      rd.min = pd.value;
+      if(rd.value < pd.value){ var nr=new Date(pd.value+"T00:00:00"); nr.setDate(nr.getDate()+3); rd.value=toInputDate(nr); }
+      recalcCalendarDays();
+    });
+    rd.addEventListener("change", function(){ recalcCalendarDays(); });
+
+    var citySel = document.getElementById("pickupCity");
+    var retSel = document.getElementById("returnCity");
+    CITIES.forEach(function(c){
+      var o1=document.createElement("option"); o1.value=c.name; o1.textContent=c.name; citySel.appendChild(o1);
+      var o2=document.createElement("option"); o2.value=c.name; o2.textContent=c.name; retSel.appendChild(o2);
+    });
+    citySel.value = state.city;
+    retSel.value = state.city;
+    citySel.addEventListener("change", function(){ 
+      state.city = citySel.value; 
+      updateResultsHeader(); 
+      highlightCityOnMap(); 
+    });
+    document.getElementById("diffReturn").addEventListener("change", function(e){
+      retSel.disabled = !e.target.checked;
+    });
+
+    document.getElementById("dayMinusBtn").addEventListener("click", function(){
+      if(state.forcedDays > 3) {
+        state.forcedDays--;
+        syncDatesFromCounter();
+        renderBooking();
+      }
+    });
+    document.getElementById("dayPlusBtn").addEventListener("click", function(){
+      state.forcedDays++;
+      syncDatesFromCounter();
+      renderBooking();
+    });
+  }
+
+  function recalcCalendarDays() {
+    var p=document.getElementById("pickupDate").value;
+    var r=document.getElementById("returnDate").value;
+    if(p && r) {
+      var ms = new Date(r+"T00:00:00") - new Date(p+"T00:00:00");
+      var days = Math.round(ms/86400000);
+      state.forcedDays = days >= 3 ? days : 3;
+    }
+    updateResultsHeader(); 
+    if(state.selectedCar) renderBooking();
+  }
+
+  function syncDatesFromCounter() {
+    var pd=document.getElementById("pickupDate").value;
+    if(pd) {
+      var d = new Date(pd+"T00:00:00");
+      d.setDate(d.getDate() + state.forcedDays);
+      document.getElementById("returnDate").value = toInputDate(d);
+    }
+    updateResultsHeader();
+  }
+
+  /* ---------------- CLASS CHIPS / TABS ---------------- */
+  function buildClassControls(){
+    var heroChips = document.getElementById("heroChips");
+    var tabs = document.getElementById("classTabs");
+    var allLabel = [["all","Все классы"]].concat(CLASS_ORDER.map(function(k){return [k, CLASS_LABELS[k]];}));
+    allLabel.forEach(function(pair){
+      var key=pair[0], label=pair[1];
+      var chip=document.createElement("button"); chip.type="button"; chip.className="chip"+(key==="all"?" active":""); chip.textContent=label; chip.dataset.cls=key;
+      chip.addEventListener("click", function(e){ e.preventDefault(); setClassFilter(key); });
+      heroChips.appendChild(chip);
+
+      var tab=document.createElement("button"); tab.type="button"; tab.className="tab-btn"+(key==="all"?" active":""); tab.textContent=label; tab.dataset.cls=key;
+      tab.addEventListener("click", function(){ setClassFilter(key); });
+      tabs.appendChild(tab);
+    });
+  }
+  function setClassFilter(key){
+    state.classFilter = key;
+    document.querySelectorAll(".chip").forEach(function(c){ c.classList.toggle("active", c.dataset.cls===key); });
+    document.querySelectorAll(".tab-btn").forEach(function(c){ c.classList.toggle("active", c.dataset.cls===key); });
+    renderCars();
+  }
+
+  /* ---------------- RESULTS HEADER ---------------- */
+  function updateResultsHeader(){
+    document.getElementById("cityLabel").textContent = state.city;
+    var pd=document.getElementById("pickupDate").value, rd=document.getElementById("returnDate").value;
+    var days = computeDays();
+    var label = (pd&&rd) ? (formatDateLabel(pd)+" — "+formatDateLabel(rd)+" · "+days+" "+dayWord(days)) : "";
+    document.getElementById("datesLabel").textContent = label;
+  }
+  function dayWord(n){
+    var n10=n%10, n100=n%100;
+    if(n10===1 && n100!==11) return "день";
+    if(n10>=2 && n10<=4 && (n100<10||n100>=20)) return "дня";
+    return "дней";
+  }
+
+  /* ---------------- CARS GRID ---------------- */
+  function renderCars(){
+    var grid = document.getElementById("carsGrid");
+    grid.innerHTML = "";
+    var list = CARS.filter(function(c){ return state.classFilter==="all" || c.cls===state.classFilter; });
+    if(state.sort==="price-asc") list.sort(function(a,b){return a.price-b.price;});
+    else if(state.sort==="price-desc") list.sort(function(a,b){return b.price-a.price;});
+    else list.sort(function(a,b){return b.rating-a.rating;});
+
+    list.forEach(function(car){
+      var color = CLASS_COLORS[car.cls];
+      var card = document.createElement("div");
+      card.className = "car-card";
+      card.innerHTML =
+        '<div class="car-card-top">'+
+          '<span class="class-badge" style="background:'+color+'">'+CLASS_LABELS[car.cls]+'</span>'+
+          '<span class="rating">★ '+car.rating.toFixed(1)+'</span>'+
+        '</div>'+
+        '<div class="car-illustration"><img src="images/'+car.img+'" alt="'+car.name+'" onerror="this.onerror=null; this.src=\'data:image/svg+xml;utf8,<svg xmlns=\\\'http://www.w3.org/2000/svg\\\' width=\\\'100\\\' height=\\\'50\\\'><text x=\\\'10\\\' y=\\\'30\\\' fill=\\\'%23aaa\\\'>'+car.name+'</text></svg>\';\"></div>'+
+        '<div class="car-name">'+car.name+'</div>'+
+        '<div class="car-sub">или похожий класс «'+CLASS_LABELS[car.cls]+'»</div>'+
+        '<div class="car-specs">'+
+          '<span class="spec">'+car.seats+' мест</span>'+
+          '<span class="spec">'+car.doors+' дверей</span>'+
+          '<span class="spec">'+car.bags+' сумки</span>'+
+          '<span class="spec">'+car.trans+'</span>'+
+        '</div>'+
+        '<div class="car-footer">'+
+          '<div class="car-price"><span class="from">от</span><span class="amount">'+rub(car.price)+'<span>/день</span></span></div>'+
+          '<button type="button" class="btn btn-primary btn-select">Выбрать</button>'+
+        '</div>';
+      card.querySelector(".btn-select").addEventListener("click", function(){ selectCar(car.id); });
+      grid.appendChild(card);
+    });
+  }
+
+  /* ---------------- BOOKING / RECEIPT ---------------- */
+  function selectCar(id){
+    state.selectedCar = CARS.filter(function(c){return c.id===id;})[0];
+    state.selectedServices = {};
+    document.getElementById("booking").classList.remove("hidden");
+    renderBooking();
+    document.getElementById("booking").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  window.removeCarFromBooking = function() {
+    state.selectedCar = null;
+    state.selectedServices = {};
+    document.getElementById("booking").classList.add("hidden");
+    window.scrollTo({top: document.getElementById("results").offsetTop - 20, behavior:"smooth"});
+  };
+
+  function renderBooking(){
+    var car = state.selectedCar;
+    if(!car) return;
+    var color = CLASS_COLORS[car.cls];
+    var days = computeDays();
+    
+    document.getElementById("dayCountVal").textContent = days;
+    document.getElementById("dayMinusBtn").disabled = (days <= 3);
+
+    var summary = document.getElementById("selectedCarSummary");
+    summary.innerHTML =
+      '<button type="button" class="btn-remove-car" onclick="removeCarFromBooking()">Отменить выбор ×</button>'+
+      '<div class="mini-ill"><img src="images/'+car.img+'" alt=""></div>'+
+      '<div class="info">'+
+        '<strong>'+car.name+' <span style="color:'+color+'">· '+CLASS_LABELS[car.cls]+'</span></strong>'+
+        '<span>'+state.city+' · '+document.getElementById("pickupDate").value+' — '+document.getElementById("returnDate").value+' · '+days+' '+dayWord(days)+'</span>'+
+      '</div>';
+
+    var list = document.getElementById("servicesList");
+    list.innerHTML = "";
+    SERVICES.forEach(function(s){
+      var item = document.createElement("label");
+      item.className = "service-item";
+      var isChecked = state.selectedServices[s.id] ? "checked" : "";
+      var priceLabel = s.perDay ? rub(s.price)+"/день" : rub(s.price)+" разово";
+      item.innerHTML =
+        '<input type="checkbox" data-sid="'+s.id+'" '+isChecked+'>'+
+        '<div><div class="s-name">'+s.name+'</div><div class="s-desc">'+s.desc+'</div></div>'+
+        '<div class="s-price">'+priceLabel+'</div>';
+      item.querySelector("input").addEventListener("change", function(e){
+        if(e.target.checked) state.selectedServices[s.id]=true; else delete state.selectedServices[s.id];
+        renderReceipt();
+      });
+      list.appendChild(item);
+    });
+    renderReceipt();
+  }
+
+  function renderReceipt(){
+    var car = state.selectedCar;
+    var days = computeDays();
+    var base = car.price * days;
+    var discount = days>=7 ? Math.round(base*0.10) : 0;
+    var lines = [];
+    lines.push({label: car.name+" × "+days+" "+dayWord(days), amount: base});
+    if(discount>0) lines.push({label:"Скидка за длительную аренду (−10%)", amount:-discount, discount:true});
+
+    var servicesTotal = 0;
+    SERVICES.forEach(function(s){
+      if(state.selectedServices[s.id]){
+        var amt = s.perDay ? s.price*days : s.price;
+        servicesTotal += amt;
+        lines.push({label: s.name + (s.perDay ? " ("+days+" "+dayWord(days)+")" : " (разово)"), amount: amt});
+      }
+    });
+
+    var total = base - discount + servicesTotal;
+
+    var linesEl = document.getElementById("receiptLines");
+    linesEl.innerHTML = "";
+    lines.forEach(function(l){
+      var row = document.createElement("div");
+      row.className = "receipt-line" + (l.discount?" discount":"");
+      row.innerHTML = '<span class="l-label">'+l.label+'</span><span>'+(l.amount<0?"−":"")+rub(Math.abs(l.amount))+'</span>';
+      linesEl.appendChild(row);
+    });
+    document.getElementById("receiptTotal").textContent = rub(total);
+    state.currentTotal = total;
+    state.currentLines = lines;
+  }
+
+  function confirmBooking(){
+    var id = "ME-"+Math.floor(100000+Math.random()*899999);
+    document.getElementById("confirmId").textContent = id;
+    var box = document.getElementById("confirmReceipt");
+    box.innerHTML = "";
+    (state.currentLines||[]).forEach(function(l){
+      var row=document.createElement("div"); row.className="receipt-line"+(l.discount?" discount":"");
+      row.innerHTML = '<span class="l-label">'+l.label+'</span><span>'+(l.amount<0?"−":"")+rub(Math.abs(l.amount))+'</span>';
+      box.appendChild(row);
+    });
+    var totalRow=document.createElement("div");
+    totalRow.className="receipt-total"; totalRow.style.marginTop="10px";
+    totalRow.innerHTML = '<span>Итого к оплате</span><span>'+rub(state.currentTotal||0)+'</span>';
+    box.appendChild(totalRow);
+
+    document.getElementById("booking").classList.add("hidden");
+    document.getElementById("confirmation").classList.add("show");
+    document.getElementById("confirmation").scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  /* ---------------- SEARCH FORM SUBMIT ---------------- */
+  document.getElementById("searchForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    updateResultsHeader();
+    renderCars();
+    document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"});
+  });
+  document.getElementById("sortSelect").addEventListener("change", function(e){
+    state.sort = e.target.value;
+    renderCars();
+  });
+
+  /* ---------------- INSERT TABLES / FAQ / DIRECTORY / FOOTER ---------------- */
+  function buildPriceBars(){
+    var ranges = {
+      economy:[1400,1850], comfort:[2500,2900], business:[4700,5200],
+      suv:[2800,4500], minivan:[4500,8800], premium:[9200,18000]
+    };
+    var max = 18000;
+    var wrap = document.getElementById("priceBars");
+    CLASS_ORDER.forEach(function(k){
+      var r = ranges[k];
+      var row = document.createElement("div"); row.className="price-bar-row";
+      var widthPct = Math.round((r[1]/max)*100);
+      row.innerHTML =
+        '<div class="label">'+CLASS_LABELS[k]+'</div>'+
+        '<div class="price-bar-track"><div class="price-bar-fill" style="width:'+widthPct+'%;background:'+CLASS_COLORS[k]+'"></div></div>'+
+        '<div class="value">'+r[0].toLocaleString("ru-RU")+'–'+r[1].toLocaleString("ru-RU")+' ₽</div>';
+      wrap.appendChild(row);
+    });
+  }
+
+  function buildFaq(){
+    var wrap = document.getElementById("faqAccordion");
+    FAQ.forEach(function(item){
+      var el = document.createElement("div"); el.className="acc-item";
+      el.innerHTML =
+        '<button type="button" class="acc-q"><span>'+item.q+'</span><span class="plus">+</span></button>'+
+        '<div class="acc-a"><div class="acc-a-inner">'+item.a+'</div></div>';
+      var btn = el.querySelector(".acc-q");
+      var panel = el.querySelector(".acc-a");
+      btn.addEventListener("click", function(){
+        var isOpen = el.classList.contains("open");
+        document.querySelectorAll(".acc-item.open").forEach(function(o){ o.classList.remove("open"); o.querySelector(".acc-a").style.maxHeight=null; });
+        if(!isOpen){ el.classList.add("open"); panel.style.maxHeight = panel.scrollHeight+"px"; }
+      });
+      wrap.appendChild(el);
+    });
+  }
+
+  function buildDirectory(){
+    var wrap = document.getElementById("directoryGrid");
+    PARTNERS.forEach(function(p){
+      var card = document.createElement("div"); card.className="directory-card";
+      card.innerHTML =
+        '<div class="d-icon">'+p.name.charAt(0)+'</div>'+
+        '<div class="d-name">'+p.name+'</div>'+
+        '<div class="d-count">'+p.points+' точек проката</div>';
+      wrap.appendChild(card);
+    });
+  }
+
+  function buildFooterCities(){
+    var wrap = document.getElementById("footerCities");
+    CITIES.forEach(function(c){
+      var li=document.createElement("li");
+      var a=document.createElement("a"); a.href="#top"; a.textContent=c.name+" — аренда авто";
+      a.addEventListener("click", function(e){ 
+        e.preventDefault(); 
+        handleCitySelection(c.name);
+        window.scrollTo({top:0,behavior:"smooth"}); 
+      });
+      li.appendChild(a); wrap.appendChild(li);
+    });
+  }
+
+  /* ---------------- LEAFLET MAP INTEGRATION ---------------- */
+  function initLeafletMap() {
+    // Инициализация карты с центром в географическом центре Европейской части РФ
+    state.leafletMap = L.map('leafletMap', {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([55.5, 49.0], 4);
+
+    // Подключение стильных бесплатных тайлов без лишних флагов и надписей
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      maxZoom: 18
+    }).addTo(state.leafletMap);
+
+    var legend = document.getElementById("legendList");
+
+    CITIES.forEach(function(c) {
+      // Кастомная круглая метка в фирменном стиле MoveEasy
+      var customIcon = L.divIcon({
+        className: 'custom-leaflet-pin',
+        html: '<div style="position:relative; display:flex; flex-direction:column; align-items:center;">' +
+                '<div class="pin-ring-fx" style="position:absolute; width:24px; height:24px; background:rgba(255,105,0,0.25); border-radius:50%; top:-7px;"></div>' +
+                '<div class="pin-dot-fx" style="width:12px; height:12px; background:#FF6900; border:2px solid #fff; border-radius:50%; z-index:2; transition: background 0.2s;"></div>' +
+                '<div style="font-size:12px; font-weight:700; color:#0B1F3A; background:rgba(255,255,255,0.85); padding:1px 5px; border-radius:4px; margin-top:4px; white-space:nowrap; border:1px solid #E5E7EB;">'+c.name+'</div>' +
+              '</div>',
+        iconSize: [20, 40],
+        iconAnchor: [10, 12]
+      });
+
+      var marker = L.marker([c.lat, c.lng], { icon: customIcon }).addTo(state.leafletMap);
+      
+      marker.on('click', function() {
+        handleCitySelection(c.name);
+        document.querySelector(".search-card").scrollIntoView({behavior:"smooth", block:"center"});
+      });
+
+      state.markers[c.name] = marker;
+
+      // Кнопки боковой панели легенды
+      var lbtn = document.createElement("button");
+      lbtn.type = "button"; 
+      lbtn.className = "legend-item"; 
+      lbtn.dataset.city = c.name;
+      lbtn.innerHTML = '<span>'+c.name+'</span><span class="count">'+c.points+'</span>';
+      lbtn.addEventListener("click", function() {
+        handleCitySelection(c.name);
+        document.querySelector(".search-card").scrollIntoView({behavior:"smooth", block:"center"});
+      });
+      legend.appendChild(lbtn);
+    });
+
+    highlightCityOnMap();
+  }
+
+  function handleCitySelection(cityName) {
+    document.getElementById("pickupCity").value = cityName;
+    state.city = cityName;
+    updateResultsHeader();
+    highlightCityOnMap();
+    renderCars();
+  }
+
+  function highlightCityOnMap() {
+    document.querySelectorAll(".legend-item").forEach(function(b){ 
+      b.classList.toggle("active", b.dataset.city === state.city); 
+    });
+
+    // Плавное центрирование карты Leaflet на выбранном городе
+    var matchedCity = CITIES.filter(function(c){ return c.name === state.city; })[0];
+    if (matchedCity && state.leafletMap) {
+      state.leafletMap.panTo([matchedCity.lat, matchedCity.lng]);
+    }
+  }
+
+  /* ---------------- BOOT ---------------- */
+  initDefaults();
+  buildClassControls();
+  buildPriceBars();
+  buildFaq();
+  buildDirectory();
+  buildFooterCities();
+  initLeafletMap();
+  updateResultsHeader();
+  renderCars();
+  
+  document.getElementById("confirmBtn").addEventListener("click", confirmBooking);
+
+  document.getElementById("newSearchBtn").addEventListener("click", function(){
+    document.getElementById("confirmation").classList.remove("show");
+    document.getElementById("booking").classList.add("hidden");
+    state.selectedCar = null;
+    window.scrollTo({top:0, behavior:"smooth"});
+  });
+
+})();
+</script>
+</body>
+</html>
